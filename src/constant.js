@@ -1,6 +1,5 @@
-const FAKE_MAP_POINTS = {
-    name: "my-map",
-    areas: [
+const FAKE_MAP_POINTS = 
+    [
       {
         name: "Cerisier du frouzet",
         shape: "circle",
@@ -27,9 +26,7 @@ const FAKE_MAP_POINTS = {
         fillColor: "yellow",
         img: "/img/chat-pipi.jpg",
         description: "Qu'il s'agisse d'un parterre de fleurs, d'un jardin d'herbes aromatiques, de plantes en pot ou d'intérieur : de nombreux chats semblent être comme ensorcelés par les végétaux dans l'appartement, sur le balcon ou dans le jardin. Ils adorent jouer avec les branches, grignoter les feuilles vertes ou creuser dans le terreau moelleux."
-      },
-
+      }
     ]
-  }
 
   export default FAKE_MAP_POINTS;

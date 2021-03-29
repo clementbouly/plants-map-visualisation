@@ -4,6 +4,7 @@ import ImageMapper from 'react-img-mapper';
 import PointDetailModal from './components/PointDetailModal';
 import CreatePointModal from './components/CreatePointModal';
 import FAKE_MAP_POINTS from './constant'
+import { Button } from 'react-bootstrap';
 
 
 function App() {
@@ -52,23 +53,30 @@ function App() {
       description: desc
     }
 
-    console.log('newPoint :>> ', newPoint);
-
-    const mapPointsUpdated = { ...mapPoints, areas: [...mapPoints.areas, newPoint] };
+    const mapPointsUpdated = [...mapPoints, newPoint];
 
     setMapPoints(mapPointsUpdated)
     setModalShow({...modalShow, createPointModal: false})
+  }
+
+  const filter = () => {
+    setMapPoints(mapPoints.filter(point => point.preFillColor === "red"));
+  }
+
+  const showHoverDetails = (evt) => {
+    console.log('evt :>> ', evt);
   }
 
   return (
     <div className="App">
       <div className="App-body">
         {message}
+        <Button onClick={filter}>FILTER</Button>
         <div className="mapImage" >
           <ImageMapper
             src={"/img/DomaineChanteCévennes.png"}
-            onMouseEnter={() => { }}
-            map={mapPoints}
+            map={{name: "vegetal-visualisation", areas : mapPoints}}
+            onMouseEnter={evt => showHoverDetails(evt)}
             onImageClick={evt => showCreationForm(evt)}
             onImageMouseMove={evt => moveOnImage(evt)}
             width={900}
