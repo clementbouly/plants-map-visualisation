@@ -1,10 +1,11 @@
 import './App.css';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ImageMapper from 'react-img-mapper';
 import PointDetailModal from './components/PointDetailModal';
 import CreatePointModal from './components/CreatePointModal';
 import FAKE_MAP_POINTS from './constant'
 import { Button } from 'react-bootstrap';
+import URL from "./assets/DomaineChanteCévennes.png";
 
 
 function App() {
@@ -17,7 +18,17 @@ function App() {
   const [mapPoints, setMapPoints] = useState(MAP)
   const [newPointCoordinates, setNewPointCoordinates] = useState({ X: "", Y: "" })
 
-
+  useEffect( () => {
+    fetch('http://localhost:8080/api/points', 
+    {
+      method: "GET"
+    })
+    .then(res =>  res.json())
+    .then(response => {
+      console.log('response :>> ', response);
+      setMapPoints(response);
+    })
+  }, [])
 
   const moveOnImage = (evt) => {
     const coords = { x: evt.nativeEvent.layerX, y: evt.nativeEvent.layerY };
@@ -53,10 +64,23 @@ function App() {
       description: desc
     }
 
-    const mapPointsUpdated = [...mapPoints, newPoint];
-
-    setMapPoints(mapPointsUpdated)
+    // const mapPointsUpdated = [...mapPoints, newPoint];
+    // setMapPoints(mapPointsUpdated)
+    
     setModalShow({...modalShow, createPointModal: false})
+
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newPoint)
+  };
+
+    fetch('http://localhost:8080/api/points', requestOptions)
+    .then(res =>  res.json())
+    .then(response => {
+      setMapPoints(response);
+    })
+
   }
 
   const filter = () => {
@@ -64,7 +88,6 @@ function App() {
   }
 
   const showHoverDetails = (evt) => {
-    console.log('evt :>> ', evt);
   }
 
   return (
@@ -74,13 +97,13 @@ function App() {
         <Button onClick={filter}>FILTER</Button>
         <div className="mapImage" >
           <ImageMapper
-            src={"/img/DomaineChanteCévennes.png"}
+            src={URL}
             map={{name: "vegetal-visualisation", areas : mapPoints}}
             onMouseEnter={evt => showHoverDetails(evt)}
             onImageClick={evt => showCreationForm(evt)}
             onImageMouseMove={evt => moveOnImage(evt)}
-            width={900}
-            height={1000}
+            //responsive={true}
+            parentWidth={500}
             onClick={evt => showDetails(evt)}
           />
         </div>
